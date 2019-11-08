@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-server
+  labels:
+    admin: admin-enabled
+  namespace: duck-pre
+spec:
+  selector:
+    app: admin-server
+  ports:
+    - port: 8345
+      protocol: TCP
+      nodePort: 45010
+  type: NodePort
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-server
+  namespace: duck-pre
+  labels:
+    app: admin-server
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: admin-server
+      namespace: duck-pre
+      labels:
+        app: admin-server
+    spec:
+      imagePullSecrets:
+        - name: registry-pull-secret
+      containers:
+        - name: admin-server
+          image: harbor.zhuiyinanian.cn/app-pre/admin-server:v1
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: time
+              mountPath: /etc/localtime
+      volumes:
+        - name: time
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Shanghai
+      restartPolicy: Always
+      serviceAccountName: duck-pre
+  selector:
+    matchLabels:
+      app: admin-server
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 30%

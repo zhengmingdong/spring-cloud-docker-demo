@@ -1,0 +1,52 @@
+server:
+  port: 8345
+
+eureka:
+  instance:
+    metadata-map:
+      user.name: ${spring.security.user.name}
+      user.password: ${spring.security.user.password}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+spring:
+  application:
+    name: admin-server
+  security:
+    user:
+      name: "admin"
+      password: "zynn_admin_123"
+  profiles:
+    active: dev
+  cloud:
+    kubernetes:
+      discovery:
+        serviceLabels:
+          admin: admin-enabled
+
+---
+spring:
+  profiles: dev
+  cloud:
+    kubernetes:
+      enabled: false
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8189/eureka
+---
+spring:
+  boot:
+    admin:
+      discovery:
+        enabled: true
+  profiles: test,pre,prod
+eureka:
+  client:
+    enabled: false

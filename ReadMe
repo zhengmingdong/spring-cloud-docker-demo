@@ -1,0 +1,12 @@
+本项目为 基于Spring Boot开发的Spring Cloud微服务框架,版本为Greenwich.SR1
+ 项目目录介绍:
+    service_bridge中为跨服务调用Client,用于微服务间跨服务调用.
+    service_modules中为服务注册中心和网关以及过滤器等,包括服务信息观察Spring Boot Admin.
+    services为单一微服务,主要服务于业务内容.
+    zynn-app-common-parent父项目用于maven版本管理.
+    zynn-app-common-core用于服务关联配置挂载,包括redis,kafka,elasticSearch等.
+    [服务启动前请添加挂载的对应服务地址,在resources下对应的properties中]
+    zynn-app-common-pojo用于统一管理 公共Bean 包括DTO,BO,VO ,枚举,通用返回Json结构内容等.
+    sql主要保存业务需求对应的数据库结构及数据信息.
+    [服务启动前请导入表bs_event_story_audio作为示例请求的基础表]
+    服务启动包括eureka,gateway,es,user

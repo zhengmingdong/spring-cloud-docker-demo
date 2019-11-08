@@ -1,0 +1,14 @@
+spring:
+  profiles: test,pre,prod
+  cloud:
+    kubernetes:
+      config:
+        name: config
+        sources:
+          - name: db-user
+          - name: kafka-config
+          - name: es-config
+          - name: redis-config
+        namespace: duck-pre
+
+

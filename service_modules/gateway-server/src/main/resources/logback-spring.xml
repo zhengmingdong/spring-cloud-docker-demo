@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright 2010-2011 The myBatis Team
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+        http://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<configuration scan="true" scanPeriod="10000" debug="false">
+    <contextName>yinian2.0</contextName>
+    <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
+    <property name="LOG_HOME" value="/tmp/logs/gateway"/>
+    <!-- 彩色日志 -->
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+    <!-- 彩色日志格式 -->
+    <property name="CONSOLE_LOG_PATTERN" value="%X{requestId} ${CONSOLE_LOG_PATTERN:-%clr(%d{MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <!--<pattern>[%d{MM-dd HH:mm:ss.SSS}]%-5level[%logger{50}]:%msg%n</pattern>-->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <!-- 不带彩色的日志在控制台输出时候的设置 -->
+    <!-- <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+             格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender> -->
+
+    <!-- 时间滚动输出 level为 DEBUG 日志 ，并按照日期分割，当文件大小超过100M的时候，写入到下一个文件中 -->
+    <appender name="file—server" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/server.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <!--<pattern>${CONSOLE_LOG_PATTERN}</pattern>-->
+            <pattern>%X{requestId} [%d{MM-dd HH:mm:ss.SSS}] %-5level %logger{50}: %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 时间滚动输出 level为 ERROR 日志 -->
+    <appender name="file—error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY </onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/error.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%X{requestId} [%d{MM-dd HH:mm:ss.SSS}] %-5level %logger{50}: %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <!--&lt;!&ndash; 按照每天生成日志文件 &ndash;&gt;-->
+    <!--<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--&lt;!&ndash;日志文件输出的文件名&ndash;&gt;-->
+            <!--<FileNamePattern>${LOG_HOME}/base-%d{yyyy-MM-dd}.log</FileNamePattern>-->
+            <!--&lt;!&ndash;日志文件保留天数&ndash;&gt;-->
+            <!--<MaxHistory>30</MaxHistory>-->
+        <!--</rollingPolicy>-->
+        <!--<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
+            <!--&lt;!&ndash;格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符&ndash;&gt;-->
+            <!--&lt;!&ndash;<pattern>${CONSOLE_LOG_PATTERN}</pattern>&ndash;&gt;-->
+            <!--<pattern>%X{requestId} [%d{MM-dd HH:mm:ss.SSS}] %-5level %logger{50}: %msg%n</pattern>-->
+        <!--</encoder>-->
+        <!--&lt;!&ndash;日志文件最大的大小&ndash;&gt;-->
+        <!--<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">-->
+            <!--<MaxFileSize>10MB</MaxFileSize>-->
+        <!--</triggeringPolicy>-->
+    <!--</appender>-->
+
+
+    <logger name="springfox.documentation.spring.web" level="ERROR" />
+    <logger name="org.springframework.test" level="ERROR" />
+    <logger name="org.springframework" level="ERROR" />
+    <logger name="org.springframework.web" level="ERROR" />
+    <logger name="com.netflix" level="ERROR" />
+    <logger name="reactor.ipc.netty" level="ERROR" />
+    <logger name="io.lettuce" level="ERROR" />
+    <logger name="io.undertow" level="ERROR" />
+    <logger name="org.apache.http" level="ERROR" />
+    <logger name="org.apache.kafka" level="ERROR" />
+    <logger name="ch.qos.logback" level="ERROR" />
+    <logger name="org.dozer" level="ERROR" />
+    <logger name="org.apache.commons" level="ERROR" />
+    <logger name="com.ibatis" level="DEBUG" />
+    <logger name="com.ibatis.common.jdbc.SimpleDataSource" level="DEBUG" />
+    <logger name="com.ibatis.common.jdbc.ScriptRunner" level="DEBUG" />
+    <logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="DEBUG" />
+    <logger name="java.sql.Connection" level="DEBUG" />
+    <logger name="java.sql.Statement" level="DEBUG" />
+    <logger name="java.sql.PreparedStatement" level="DEBUG" />
+    <logger name="org.quartz" level="INFO" />
+    <logger name="jdbc.connection" level="OFF" />
+    <logger name="jdbc.audit" level="OFF" />
+    <logger name="jdbc.resultset" level="OFF" />
+    <logger name="jdbc.sqlonly" level="OFF" />
+    <logger name="jdbc.sqltiming" level="INFO" />
+
+    <!--&lt;!&ndash; 日志输出级别 &ndash;&gt;-->
+    <!--<root level="error">-->
+        <!--<appender-ref ref="STDOUT"/>-->
+        <!--<appender-ref ref="FILE"/>-->
+    <!--</root>-->
+
+    <!-- 根据环境输出日志级别-->
+    <springProfile name="dev">
+        <root level="debug">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="file—server" />
+            <appender-ref ref="file—error" />
+        </root>
+    </springProfile>
+
+    <springProfile name="test">
+        <root level="info">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="file—server" />
+            <appender-ref ref="file—error" />
+        </root>
+    </springProfile>
+
+    <springProfile name="pre">
+        <root level="info">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="file—server" />
+            <appender-ref ref="file—error" />
+        </root>
+    </springProfile>
+
+    <springProfile name="prod">
+        <root level="info">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="file—server" />
+            <appender-ref ref="file—error" />
+        </root>
+    </springProfile>
+
+</configuration>

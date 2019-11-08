@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.zynn.app.common.pojo</groupId>
+    <artifactId>zynn-app-common-pojo</artifactId>
+    <version>1.5.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>zynn-app-common-pojo</name>
+    <description>Demo project for Spring Boot</description>
+
+    <!-- 继承本项目的父工程 -->
+    <parent>
+        <groupId>com.zynn.app.parent</groupId>
+        <artifactId>zynn-app-common-parent</artifactId>
+        <version>1.5.0-SNAPSHOT</version>
+        <relativePath>../zynn-app-common-parent/pom.xml</relativePath>
+    </parent>
+
+    <dependencies>
+        <!-- mybatis-plus begin -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+        </dependency>
+    </dependencies>
+
+
+</project>

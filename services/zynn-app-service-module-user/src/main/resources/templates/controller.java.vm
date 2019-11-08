@@ -1,0 +1,39 @@
+package ${package.Controller};
+
+#if(${superControllerClassPackage})
+import ${superControllerClassPackage};
+#end
+import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestMapping;
+#if(${restControllerStyle})
+import org.springframework.web.bind.annotation.RestController;
+#else
+#end
+
+import static com.zynn.common.core.constant.ApiPathConstant.PATH_PREFIX_V1;
+
+/**
+ * <p>
+ * $!{table.comment} 前端控制器
+ * </p>
+ *
+ * @author ${author}
+ */
+@Api(tags = {"${entity}"}, description = "${table.comment}相关接口")
+#if(${restControllerStyle})
+@RestController
+#else
+@Controller
+#end
+@RequestMapping(PATH_PREFIX_V1 + "#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
+#if(${superControllerClass})
+@Validated
+@Slf4j
+public class ${table.controllerName} extends ${superControllerClass} {
+#else
+public class ${table.controllerName} {
+#end
+
+}

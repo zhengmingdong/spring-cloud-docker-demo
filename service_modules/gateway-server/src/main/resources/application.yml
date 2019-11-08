@@ -1,0 +1,112 @@
+spring:
+  application:
+    name: gateway_server
+  profiles:
+    active: dev
+  ##跨域设置，先设置最粗的粒度
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DETELE
+              - OPTIONS
+            maxAge: 3600
+            allowedHeaders: "*"
+  redis:
+    lettuce:
+      pool:
+        max-active: 50
+        max-idle: 8
+        min-idle: 0
+        max-wait: 3000ms
+    timeout: 3000
+  zipkin:
+    sender:
+      type: kafka
+  kafka:
+    consumer:
+      group-id: Kafka-Cluster-1
+server:
+  port: 8186
+
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 8000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+#eureka配置
+eureka:
+  instance:
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    prefer-ip-address: true
+
+
+
+---
+spring:
+  profiles: dev
+  redis:
+    cluster:
+      max-redirects: 3
+      nodes: 47.112.0.55:7001,47.112.0.55:7002,47.112.0.55:7003
+    password: jg8098yzVnwU251lolv7
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: 47.112.0.55:9093
+    kubernetes:
+      enabled: false
+  kafka:
+    bootstrap-servers: 47.112.0.55:9093
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8189/eureka
+
+
+---
+spring:
+  profiles: test
+  cloud:
+    kubernetes:
+      discovery:
+        enabled: true
+eureka:
+  client:
+    enabled: false
+
+---
+spring:
+  profiles: pre
+  cloud:
+    kubernetes:
+      discovery:
+        enabled: true
+eureka:
+  client:
+    enabled: false
+
+---
+spring:
+  profiles: prod
+  cloud:
+    kubernetes:
+      discovery:
+        enabled: true
+eureka:
+  client:
+    enabled: false
